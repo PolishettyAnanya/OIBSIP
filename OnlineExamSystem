@@ -1,0 +1,121 @@
+import java.util.Scanner;
+import java.util.ArrayList;
+
+class User {
+    private String username;
+    private String password;
+    private UserProfile profile;
+    private ArrayList<String> selectedAnswers;
+
+    public User(String username, String password, String name, String email) {
+        this.username = username;
+        this.password = password;
+        this.profile = new UserProfile(name, email);
+        this.selectedAnswers = new ArrayList<>();
+    }
+
+    public boolean authenticate(String inputUsername, String inputPassword) {
+        return username.equals(inputUsername) && password.equals(inputPassword);
+    }
+
+    public UserProfile getProfile() {
+        return profile;
+    }
+
+    public void updateProfile(String newName, String newEmail) {
+        profile.setName(newName);
+        profile.setEmail(newEmail);
+    }
+
+    public void selectAnswer(String answer) {
+        selectedAnswers.add(answer);
+    }
+
+    public ArrayList<String> getSelectedAnswers() {
+        return selectedAnswers;
+    }
+}
+
+class UserProfile {
+    private String name;
+    private String email;
+
+    public UserProfile(String name, String email) {
+        this.name = name;
+        this.email = email;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    @Override
+    public String toString() {
+        return "Name: " + name + ", Email: " + email;
+    }
+}
+
+public class OnlineExamSystem {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        User user = new User("user123", "password123", "John Doe", "john@example.com");
+
+        System.out.print("Enter Username: ");
+        String inputUsername = scanner.nextLine();
+
+        System.out.print("Enter Password: ");
+        String inputPassword = scanner.nextLine();
+
+        if (user.authenticate(inputUsername, inputPassword)) {
+            System.out.println("Login successful!");
+
+            while (true) {
+                System.out.println("1. Update Profile");
+                System.out.println("2. Select Answer for MCQ");
+                System.out.println("3. View Selected Answers");
+                System.out.println("4. Logout");
+                System.out.print("Select an option: ");
+                int choice = scanner.nextInt();
+                scanner.nextLine(); // Consume newline
+
+                switch (choice) {
+                    case 1:
+                        System.out.print("Enter new Name: ");
+                        String newName = scanner.nextLine();
+                        System.out.print("Enter new Email: ");
+                        String newEmail = scanner.nextLine();
+                        user.updateProfile(newName, newEmail);
+                        System.out.println("Profile updated!");
+                        break;
+                    case 2:
+                        System.out.print("Enter your answer for MCQ: ");
+                        String mcqAnswer = scanner.nextLine();
+                        user.selectAnswer(mcqAnswer);
+                        System.out.println("Answer selected!");
+                        break;
+                    case 3:
+                        ArrayList<String> selectedAnswers = user.getSelectedAnswers();
+                        System.out.println("Selected Answers:");
+                        for (String answer : selectedAnswers) {
+                            System.out.println(answer);
+                        }
+                        break;
+                    case 4:
+                        System.out.println("Logging out...");
+                        System.exit(0);
+                    default:
+                        System.out.println("Invalid choice.");
+                }
+            }
+        } else {
+            System.out.println("Invalid credentials. Exiting...");
+        }
+
+        scanner.close();
+    }
+}
